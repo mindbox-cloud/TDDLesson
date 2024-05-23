@@ -7,7 +7,10 @@ public sealed class BankAccount
 
     public BankAccount(int balance = 0, int overdraft = 0)
     {
+        ValidateMoney(balance);
         Balance = balance;
+        
+        ValidateMoney(overdraft);
         Overdraft = overdraft;
     }
 

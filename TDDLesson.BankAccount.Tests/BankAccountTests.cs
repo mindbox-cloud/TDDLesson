@@ -91,11 +91,11 @@ public sealed class BankAccountTests
     }
     
     [TestMethod]
-    public void FailCraeteWithOverdraw_WhenBalanceInsufficient()
+    public void FailCreateWithOverdraw_WhenBalanceInsufficient()
     {
         var act = () => new BankAccount(-10, -1);
 
-        act.Should().Throw<InvalidOperationException>().WithMessage("Недостаточно деняк");
+        act.Should().Throw<InvalidOperationException>().WithMessage("Money should be more than zero");
     }
     
 }
