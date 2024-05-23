@@ -99,8 +99,44 @@ public sealed class BankAccountTests
         var money = -100;
 
         // Act
-        var act = () => bankAccount.Add(money);
+        var act = () => bankAccount.Take(money);
 
+        // Assert
+        act.Should().Throw<InvalidOperationException>();
+    }
+    
+    [TestMethod]
+    public void CreateBankAccount_WithoutLimit_LimitIsZero()
+    {
+        // Act
+        var bankAccount = new BankAccount();
+
+        // Assert
+        bankAccount.Limit.Should().Be(0);
+    }
+    
+    [TestMethod]
+    public void CreateBankAccount_WithLimit_LimitSetSuccessfully()
+    {
+        // Arrange
+        var limit = 1000;
+        
+        // Act
+        var bankAccount = new BankAccount(limit);
+
+        // Assert
+        bankAccount.Limit.Should().Be(limit);
+    }
+    
+    [TestMethod]
+    public void CreateBankAccount_WithNegativeLimit_ThrowInvalidOperationException()
+    {
+        // Arrange
+        var limit = -1000;
+        
+        // Act
+        var act = () => new BankAccount(limit);
+        
         // Assert
         act.Should().Throw<InvalidOperationException>();
     }
