@@ -8,6 +8,6 @@ public sealed class BankAccount
     {
         if (money < 0) throw new InvalidOperationException();
         
-        Balance = money;
+        Balance += money;
     }
 }
