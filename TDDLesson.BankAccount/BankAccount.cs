@@ -22,6 +22,9 @@ public sealed class BankAccount
         if (amount > Balance)
             throw new InvalidOperationException($"Not enough money on balance to withdraw.");
         
+        if (amount <= 0)
+            throw new InvalidOperationException($"Amount should be positive number.");
+        
         Balance -= amount;
     }
 }

@@ -42,4 +42,13 @@ public sealed class BankAccountTests
         var bankAccount = new BankAccount(initialBalance);
         FluentActions.Invoking(() => bankAccount.WithdrawMoney(amount)).Should().Throw<InvalidOperationException>();
     }
+
+    [DataRow(1000, -100)]
+    [DataRow(1000, 0)]
+    [TestMethod]
+    public void WithdrawMoney_NegativeNumber_ThrowInvalidOperationException(int initialBalance, int amount)
+    {
+        var bankAccount = new BankAccount(initialBalance);
+        FluentActions.Invoking(() => bankAccount.WithdrawMoney(amount)).Should().Throw<InvalidOperationException>();
+    }
 }
