@@ -3,10 +3,12 @@
 public sealed class BankAccount
 {
     public int Balance { get; private set; }
+    public int Overdraft { get; private set; }
 
-    public BankAccount(int balance = 0)
+    public BankAccount(int balance = 0, int overdraft = 0)
     {
         Balance = balance;
+        Overdraft = overdraft;
     }
 
     public void Add(int money)
@@ -16,11 +18,11 @@ public sealed class BankAccount
         Balance += money;
     }
 
-    public void Take(int money)
+    public void Withdraw(int money)
     {
         ValidateMoney(money);
         
-        if (Balance < money) throw new InvalidOperationException();
+        if (Balance + Overdraft < money) throw new InvalidOperationException("Недостаточно деняк");
         
         Balance -= money;
     }
