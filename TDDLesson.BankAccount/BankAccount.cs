@@ -1,13 +1,25 @@
 ﻿namespace TDDLesson.BankAccount;
 
-public sealed class BankAccount
+public record BankAccount
 {
+    public BankAccount(int balance = 0)
+    {
+        Balance = balance;
+    }
+
     public int Balance { get; private set; }
 
-    public void Add(int money)
+    public BankAccount Add(int money)
     {
-        if (money < 0) throw new InvalidOperationException();
+        if (money < 0) throw new ArgumentException();
+        return new BankAccount(Balance + money);
+    }
+    
+    public BankAccount Withdraw(int money)
+    {
+        if (money < 0) throw new ArgumentException();
+        if (money > Balance) throw new InvalidOperationException();
         
-        Balance = money;
+        return new BankAccount(Balance - money);
     }
 }
