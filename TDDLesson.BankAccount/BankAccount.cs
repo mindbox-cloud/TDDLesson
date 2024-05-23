@@ -14,7 +14,10 @@ public sealed class BankAccount
     public void Take(int money)
     {
         //if (money < 0) throw new InvalidOperationException();
+
+        if (money > Balance)
+            throw new InvalidOperationException("Money not enough");
         
-        //Balance = money;
+        Balance -= money;
     }
 }
