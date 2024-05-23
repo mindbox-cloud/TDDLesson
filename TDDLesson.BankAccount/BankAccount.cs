@@ -2,7 +2,15 @@
 
 public sealed class BankAccount
 {
+    public BankAccount(int balance = 0, int limit = 0)
+    {
+        Balance = balance;
+        Limit = limit;
+    }
+    
     public int Balance { get; private set; }
+    
+    public int Limit { get; init; }
 
     public void Add(int money)
     {
@@ -17,8 +25,8 @@ public sealed class BankAccount
         if (money < 0)
             throw new ArgumentException("The amount must be greater than zero");
 
-        if (Balance < money)
-            throw new InvalidOperationException("You are trying to take off more than you have.");
+        if (Balance - money < Limit)
+            throw new InvalidOperationException();
 
         Balance -= money;
     }

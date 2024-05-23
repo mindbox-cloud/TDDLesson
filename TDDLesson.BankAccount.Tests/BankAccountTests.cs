@@ -11,8 +11,7 @@ public sealed class BankAccountTests
     public void AddPositiveMoneyToBalance_MoneyAdded(int initialBalance, int money, int expected)
     {
         // Arrange
-        var account = new BankAccount();
-        account.Add(money);
+        var account = new BankAccount(initialBalance);
         
         // Act
         account.Add(money);
@@ -52,15 +51,14 @@ public sealed class BankAccountTests
     public void WithdrawalsNegativeMoneyFromBalance_ShouldThrowArgumentException(int initialBalance, int money)
     {
         // Arrange
-        var account = new BankAccount();
-        account.Add(money);
+        var account = new BankAccount(initialBalance);
         
         // Act + Assert
         Assert.ThrowsException<ArgumentException>(() => account.Withdrawals(money));
         Assert.AreEqual(initialBalance, account.Balance);
     }
     
-    [TestMethod]
+    /* [TestMethod]
     [DataRow(5)]
     public void WithdrawalsMoneyFromBalance_BalanceLessThanWithdrawalAmount_ShouldThrowInvalidOperationException(int money)
     {
@@ -68,6 +66,31 @@ public sealed class BankAccountTests
         var account = new BankAccount();
         
         // Act + Assert
+        Assert.ThrowsException<InvalidOperationException>(() => account.Withdrawals(money));
+    }*/ 
+
+    [TestMethod]
+    [DataRow(5, -5)]
+    public void WithdrawalsMoneyFromBalance_BalanceLessThanWithdrawalAmount_ShouldBeNegative(int money, int expectedMoney)
+    {
+        // Arrange
+        var account = new BankAccount();
+        
+        // Act
+        account.Withdrawals(money);
+        
+        //Assert
+        Assert.AreEqual(expectedMoney, account.Balance);
+    }
+
+    [TestMethod]
+    [DataRow(0, 5, 10)]
+    public void WithdrawalsMoneyFromBalance_WithdrawalMoreThanLimit_ThrowsInvalidOperationException(int initialMoney, int limit, int money)
+    {
+        // Arrange
+        var account = new BankAccount(initialMoney, limit);
+        
+        // Act
         Assert.ThrowsException<InvalidOperationException>(() => account.Withdrawals(money));
     }
 }
