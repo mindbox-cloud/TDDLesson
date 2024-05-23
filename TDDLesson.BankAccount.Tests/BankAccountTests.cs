@@ -89,7 +89,7 @@ public sealed class BankAccountTests
         var amount = -1;
         
         // Act
-        var act = () => new BankAccount(amount);;
+        var act = () => new BankAccount(amount);
         
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("Cannot create account with negative balance");
@@ -102,9 +102,85 @@ public sealed class BankAccountTests
         var amount = 0;
         
         // Act
-        var account = new BankAccount(amount);;
+        var account = new BankAccount(amount);
         
         // Assert
         account.Balance.Should().Be(amount);
+    }
+    
+    [TestMethod]
+    public void ShouldCreateBankAccount_WhenAccountCreatedWithZeroBalanceAndLimit()
+    {
+        // Arrange
+        var amount = 0;
+        var limit = 100;
+        
+        // Act
+        var account = new BankAccount(amount, limit);
+        
+        // Assert
+        account.Limit.Should().Be(limit);
+    }
+    
+    [TestMethod]
+    public void ShouldNotCreateBankAccount_WhenAccountCreatedWithZeroBalanceAndNegativeLimit()
+    {
+        // Arrange
+        var amount = 0;
+        var limit = -100;
+        
+        // Act
+        var act = () => new BankAccount(amount, limit);
+        
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("Cannot create account with negative limit");
+    }
+    
+    [TestMethod]
+    public void ShouldWithdrawIncludeLimit_WhenMoneyInLimit()
+    {
+        // Arrange
+        var amount = 100;
+        var limit = 100;
+        var sum = amount + limit;
+        var account = new BankAccount(amount, limit);
+        
+        // Act
+        account.Withdraw(sum);
+        
+        // Assert
+        account.Balance.Should().Be(-100);
+    }
+    
+    [TestMethod]
+    public void ShouldWithdrawIncludeLimit_WhenMoneyOutOfLimit()
+    {
+        // Arrange
+        var amount = 100;
+        var limit = 100;
+        var sum = amount + limit + 100;
+        var account = new BankAccount(amount, limit);
+        
+        // Act
+        var act = () => account.Withdraw(sum);
+        
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("Not enough balance");
+    }
+    
+    [TestMethod]
+    public void ShouldDecreaseLimit_WhenWithdrawMoreThanBalance()
+    {
+        // Arrange
+        var amount = 100;
+        var limit = 100;
+        var sum = amount + limit;
+        var account = new BankAccount(amount, limit);
+        
+        // Act
+        account.Withdraw(sum);
+        
+        // Assert
+        account.Limit.Should().Be(0);
     }
 }

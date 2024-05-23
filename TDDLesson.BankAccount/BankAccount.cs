@@ -3,11 +3,14 @@
 public sealed class BankAccount
 {
     public int Balance { get; private set; }
+    public int Limit { get; private set; }
 
-    public BankAccount(int initialAmount)
+    public BankAccount(int initialAmount, int limit = 0)
     {
         if (initialAmount < 0) throw new InvalidOperationException("Cannot create account with negative balance");
+        if (limit < 0) throw new InvalidOperationException("Cannot create account with negative limit");
         Balance = initialAmount;
+        Limit = limit;
     }
 
     public void Add(int money)
@@ -21,8 +24,11 @@ public sealed class BankAccount
     {
         if (money < 0) throw new InvalidOperationException("Incorrect value");
 
-        if (Balance < money) throw new InvalidOperationException("Not enough balance");
+        if (Balance + Limit < money) throw new InvalidOperationException("Not enough balance");
         
         Balance -= money;
+
+        if (money > Balance)
+            Limit -= money - Balance;
     }
 }
