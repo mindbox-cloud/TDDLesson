@@ -10,4 +10,11 @@ public sealed class BankAccount
         
         Balance += money;
     }
+    
+    public void Take(int money)
+    {
+        //if (money < 0) throw new InvalidOperationException();
+        
+        //Balance = money;
+    }
 }

@@ -16,7 +16,7 @@ public sealed class BankAccountTests
         bankAccount.Add(money);
 
         // Assert
-        Assert.AreEqual(100, bankAccount.Balance);
+        bankAccount.Should().Be(100);
     }
     
     [TestMethod]
@@ -31,6 +31,20 @@ public sealed class BankAccountTests
         bankAccount.Add(money);
 
         // Assert
-        Assert.AreEqual(200, bankAccount.Balance);
+        bankAccount.Should().Be(200);
+    }
+    
+    [TestMethod]
+    public void AddMoneyToNonEmptyBankAccount_NegativeMoney_ThrowInvalidOperationException()
+    {
+        // Arrange
+        var bankAccount = new BankAccount();
+        var money = -100;
+
+        // Act
+        var act = () => bankAccount.Add(money);
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>();
     }
 }
