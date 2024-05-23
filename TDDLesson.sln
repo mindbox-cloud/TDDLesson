@@ -1,6 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDLesson", "TDDLesson\TDDLesson.csproj", "{8AE11FD8-43C0-42E6-8831-36D41B74B54A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDLesson.Orders", "TDDLesson.Orders\TDDLesson.Orders.csproj", "{8AE11FD8-43C0-42E6-8831-36D41B74B54A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDLesson.Orders.Tests", "TDDLesson.Orders.Tests\TDDLesson.Orders.Tests.csproj", "{2B1AD075-7A4A-49B7-9CF8-EEEA86C16623}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDLesson.BankAccount.Tests", "TDDLesson.BankAccount.Tests\TDDLesson.BankAccount.Tests.csproj", "{A1C13C34-45B1-45A0-A46D-2A5D0615CCAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDLesson.BankAccount", "TDDLesson.BankAccount\TDDLesson.BankAccount.csproj", "{0F60C690-631A-49E5-B23C-8FAB63E3816F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +18,17 @@ Global
 		{8AE11FD8-43C0-42E6-8831-36D41B74B54A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AE11FD8-43C0-42E6-8831-36D41B74B54A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AE11FD8-43C0-42E6-8831-36D41B74B54A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B1AD075-7A4A-49B7-9CF8-EEEA86C16623}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B1AD075-7A4A-49B7-9CF8-EEEA86C16623}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B1AD075-7A4A-49B7-9CF8-EEEA86C16623}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B1AD075-7A4A-49B7-9CF8-EEEA86C16623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C13C34-45B1-45A0-A46D-2A5D0615CCAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C13C34-45B1-45A0-A46D-2A5D0615CCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C13C34-45B1-45A0-A46D-2A5D0615CCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C13C34-45B1-45A0-A46D-2A5D0615CCAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F60C690-631A-49E5-B23C-8FAB63E3816F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F60C690-631A-49E5-B23C-8FAB63E3816F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F60C690-631A-49E5-B23C-8FAB63E3816F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F60C690-631A-49E5-B23C-8FAB63E3816F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
