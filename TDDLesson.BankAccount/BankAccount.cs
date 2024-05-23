@@ -24,7 +24,8 @@ public sealed class BankAccount
     {
         if (money < 0) throw new InvalidOperationException();
 
-        if (money > Balance)
+        var allMoney = Balance + Limit;
+        if (allMoney < money)
             throw new InvalidOperationException("Money not enough");
         
         Balance -= money;

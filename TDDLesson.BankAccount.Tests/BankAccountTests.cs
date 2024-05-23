@@ -140,4 +140,18 @@ public sealed class BankAccountTests
         // Assert
         act.Should().Throw<InvalidOperationException>();
     }
+    
+    [TestMethod]
+    public void TakeMoneyCreditWithinLimit_MoneySuccessfullyTaken()
+    {
+        // Arrange
+        var bankAccount = new BankAccount(100);
+        bankAccount.Add(50);
+
+        // Act
+        bankAccount.Take(100);
+
+        // Assert
+        bankAccount.Balance.Should().Be(-50);
+    }
 }
