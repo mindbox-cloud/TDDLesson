@@ -5,5 +5,4 @@ using FluentAssertions;
 [TestClass]
 public sealed class BankAccountTests
 {
-
 }
