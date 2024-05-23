@@ -1,13 +1,8 @@
 ﻿namespace TDDLesson.BankAccount;
 
-public record BankAccount
+public record BankAccount(int Overdraft, int Balance = 0)
 {
-    public BankAccount(int balance = 0)
-    {
-        Balance = balance;
-    }
-
-    public int Balance { get; private set; }
+    public int Balance { get; private set; } = Balance;
 
     public BankAccount Add(int money)
     {
@@ -18,8 +13,7 @@ public record BankAccount
     public BankAccount Withdraw(int money)
     {
         if (money < 0) throw new ArgumentException();
-        if (money > Balance) throw new InvalidOperationException();
-        
-        return new BankAccount(Balance - money);
+        if (Balance + Overdraft - money <  0) throw new InvalidOperationException();
+        return new BankAccount(Balance + Overdraft - money, Overdraft);
     }
 }

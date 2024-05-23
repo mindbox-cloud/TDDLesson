@@ -16,7 +16,7 @@ public sealed class BankAccountTests
     {
         // Arrange
         var balance = 20;
-        var account = new BankAccount();
+        var account = new BankAccount(0);
         
         // Act
         var newAccount = account.Add(balance);
@@ -61,7 +61,7 @@ public sealed class BankAccountTests
         // Arrange
         var balanceBefore = 30;
         var balance = 10;
-        var account = new BankAccount(balanceBefore);
+        var account = new BankAccount(0, balanceBefore);
         
         // Act
         var newAccount = account.Withdraw(balance);
@@ -76,7 +76,7 @@ public sealed class BankAccountTests
         // Arrange
         var balanceBefore = 30;
         var balanceWithdrawn = -20;
-        var account = new BankAccount(balanceBefore);
+        var account = new BankAccount(0, balanceBefore);
         
         // Act
         var newAccount = () => account.Withdraw(balanceWithdrawn);
@@ -86,17 +86,33 @@ public sealed class BankAccountTests
     }
     
     [TestMethod]
-    public void ShouldThrow_WhenWithdrawnMoreThanOnAccount()
+    public void ShouldThrow_WhenWithdrawnMoreThanOnAccountIncludingOverdraft()
     {
         // Arrange
+        var balanceOverdraft = 10;
         var balanceBefore = 30;
         var balanceWithdrawn = 50;
-        var account = new BankAccount(balanceBefore);
+        var account = new BankAccount(0, balanceBefore);
         
         // Act
         var newAccount = () => account.Withdraw(balanceWithdrawn);
         
         // Assert
         newAccount.Should().ThrowExactly<InvalidOperationException>();
+    }
+        
+    [TestMethod]
+    public void ShouldBeMinus50OnAccount_WhenWithdrawn50AndZeroOnAccount()
+    {
+        // Arrange
+        var balanceBefore = 10;
+        var balanceWithdrawn = 50;
+        var account = new BankAccount(0, balanceBefore);
+        
+        // Act
+        var newAccount = account.Withdraw(balanceWithdrawn);
+        
+        // Assert
+        newAccount.Balance.Should().Be(-40);
     }
 }
