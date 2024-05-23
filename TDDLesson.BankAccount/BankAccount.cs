@@ -4,10 +4,24 @@ public sealed class BankAccount
 {
     public int Balance { get; private set; }
 
-    public void Add(int money)
+    public BankAccount(int balance)
     {
-        if (money < 0) throw new InvalidOperationException();
+        Balance = balance;
+    }
+
+    public void AddMoney(int amount)
+    {
+        if (amount <= 0)
+            throw new InvalidOperationException($"Amount should be positive number.");
         
-        Balance = money;
+        Balance += amount;
+    }
+
+    public void WithdrawMoney(int amount)
+    {
+        if (amount > Balance)
+            throw new InvalidOperationException($"Not enough money on balance to withdraw.");
+        
+        Balance -= amount;
     }
 }
