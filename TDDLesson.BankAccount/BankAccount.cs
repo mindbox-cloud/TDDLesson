@@ -2,7 +2,7 @@
 
 public sealed class BankAccount
 {
-    public int Balance { get; set; }
+    public int Balance { get; private set; }
 
     public void Add(int money)
     {
