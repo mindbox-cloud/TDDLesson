@@ -15,4 +15,9 @@ public class AccreditationProposalProcessor
     {
         
     }
+
+    public static bool Validate(int employeesCount, float percentOfRevenue)
+    {
+        return employeesCount > Constants.EmployeesAmount && percentOfRevenue > Constants.RevenuePercent;
+    }
 }
