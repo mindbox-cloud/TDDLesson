@@ -11,7 +11,7 @@ public class UnitTest1
     [DataRow(1000, 1f)]
     public void ValidateProposal_ValidParameters_Success(int employeesCount, float percentOfRevenue)
     {
-        var shouldSave = AccreditationProposalProcessor.Validate(employeesCount, percentOfRevenue);
+        var shouldSave = AccreditationProposalProcessor.ValidateProposal(employeesCount, percentOfRevenue);
         
         shouldSave.Should().BeTrue();
     }
@@ -26,7 +26,7 @@ public class UnitTest1
     [DataRow(0, 0f)]
     public void ValidateProposal_InvalidParameters_Failed(int employeesCount, float percentOfRevenue)
     {
-        var shouldSave = AccreditationProposalProcessor.Validate(employeesCount, percentOfRevenue);
+        var shouldSave = AccreditationProposalProcessor.ValidateProposal(employeesCount, percentOfRevenue);
         
         shouldSave.Should().BeFalse();
     }
@@ -36,7 +36,7 @@ public class UnitTest1
     [DataRow(-100, 0.3f)]
     public void ValidateProposal_NegativeEmployeesCount_ThrowsArgumentException(int employeesCount, float percentOfRevenue)
     {
-        FluentActions.Invoking(() => AccreditationProposalProcessor.Validate(employeesCount, percentOfRevenue))
+        FluentActions.Invoking(() => AccreditationProposalProcessor.ValidateProposal(employeesCount, percentOfRevenue))
             .Should()
             .Throw<ArgumentException>()
             .WithMessage($"The number of employees cannot be negative. (Parameter '{nameof(employeesCount)}')");
@@ -46,9 +46,33 @@ public class UnitTest1
     [DataRow(100, -0.3f)]
     public void ValidateProposal_NegativeRevenuePercent_ThrowsArgumentException(int employeesCount, float percentOfRevenue)
     {
-        FluentActions.Invoking(() => AccreditationProposalProcessor.Validate(employeesCount, percentOfRevenue))
+        FluentActions.Invoking(() => AccreditationProposalProcessor.ValidateProposal(employeesCount, percentOfRevenue))
             .Should()
             .Throw<ArgumentException>()
             .WithMessage($"The percent of revenue cannot be negative. (Parameter '{nameof(percentOfRevenue)}')");
+    }
+
+    [TestMethod]
+    [DataRow("2024-06-01")]
+    [DataRow("2024-09-01")]
+    [DataRow("2024-08-05")]
+    public void ValidateNotification_DateTimeInRange_Success(string dateTime)
+    {
+        var validDate = DateTime.Parse(dateTime);
+        var shouldNotify = AccreditationProposalProcessor.ValidateNotification(validDate);
+
+        shouldNotify.Should().BeTrue();
+    }
+    
+    [TestMethod]
+    [DataRow("2024-05-31")]
+    [DataRow("2024-09-02")]
+    [DataRow("2023-08-05")]
+    public void ValidateNotification_DateTimeOutOfRange_Fail(string dateTime)
+    {
+        var validDate = DateTime.Parse(dateTime);
+        var shouldNotify = AccreditationProposalProcessor.ValidateNotification(validDate);
+
+        shouldNotify.Should().BeFalse();
     }
 }
