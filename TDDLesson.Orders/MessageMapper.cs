@@ -4,13 +4,13 @@ namespace TDDLesson;
 
 public static class MessageMapper
 {
-    public static (string subject, string message) MapMessage(ProposalStatus proposalStatus)
+    public static (string subject, string bodyTemplate) MapMessage(ProposalStatus proposalStatus)
     {
         return proposalStatus switch
         {
-            ProposalStatus.Declined => (Messages.DeclinedSubject, Messages.DeclinedBody),
-            ProposalStatus.Processed => (Messages.ProcessedSubject, Messages.ProcessedBody),
-            ProposalStatus.ProcessedAndInvited => (Messages.InviteSubject, Messages.InviteBody),
+            ProposalStatus.Declined => (Messages.DeclinedSubject, Messages.DeclinedBodyTemplate),
+            ProposalStatus.Processed => (Messages.ProcessedSubject, Messages.ProcessedBodyTemplate),
+            ProposalStatus.ProcessedAndInvited => (Messages.InviteSubject, Messages.InviteBodyTemplate),
             _ => throw new ArgumentOutOfRangeException(nameof(proposalStatus))
         };
     }

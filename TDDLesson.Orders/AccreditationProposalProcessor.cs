@@ -20,7 +20,7 @@ public class AccreditationProposalProcessor
 
     public async Task<ProcessingResult> HandleProposal(ProposalDto dto)
     {
-        var dateTime = DateTime.Now;
+        var dateTime = DateTime.UtcNow;
 
         var validationResult = ValidationService.Validate(dto);
 
@@ -36,7 +36,9 @@ public class AccreditationProposalProcessor
 
         var status = StatusEvaluator.Evaluate(dto, dateTime, revenuePercent);
 
-        var (subject, body) = MessageMapper.MapMessage(status);
+        var (subject, bodyTemplate) = MessageMapper.MapMessage(status);
+        var body = MessageRenderer.RenderBody(dto.CompanyName, bodyTemplate);
+
         await _emailClient.SendEmail(dto.CompanyEmail, subject, body);
 
         var processedProposal = new ProcessedProposal(dto, dateTime, status);
