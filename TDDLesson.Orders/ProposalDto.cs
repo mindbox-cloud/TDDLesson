@@ -19,6 +19,13 @@ public static class ProposalDtoExtensions
         this ProposalDto proposalDto,
         float revenuePercent)
     {
+        if (!isValid(proposalDto))
+            return false;
         return proposalDto.EmployeesAmount > MinEmployeesAmount && revenuePercent > MinITRevenuePercent;
     }
+    private static bool isValid(ProposalDto proposalDto)
+    {
+        throw new NotImplementedException();
+    }
+
 }

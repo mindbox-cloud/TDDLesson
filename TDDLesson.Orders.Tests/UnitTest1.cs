@@ -1,5 +1,4 @@
 using FluentAssertions;
-
 using TDDLesson;
 
 namespace TestProject1;
@@ -20,14 +19,14 @@ public class UnitTest1
         };
 
         var revenuePercent = 31;
-        
+
         // Act
         var isApproved = proposal.IsAppropriate(revenuePercent);
-        
+
         // Assert
         isApproved.Should().BeTrue();
     }
-    
+
     [TestMethod]
     public void ShouldNotApproveProposal_WhenNotEnoughEmployees()
     {
@@ -37,18 +36,18 @@ public class UnitTest1
             CompanyNumber = 1,
             CompanyName = "Mindbox",
             CompanyEmail = "test@mindbox.cloud",
-            EmployeesAmount = 99
+            EmployeesAmount = 100
         };
 
         var revenuePercent = 31;
-        
+
         // Act
         var isApproved = proposal.IsAppropriate(revenuePercent);
-        
+
         // Assert
         isApproved.Should().BeFalse();
     }
-    
+
     [TestMethod]
     public void ShouldNotApproveProposal_WhenNotEnoughRevenuePercent()
     {
@@ -62,11 +61,54 @@ public class UnitTest1
         };
 
         var revenuePercent = 30;
-        
+
         // Act
         var isApproved = proposal.IsAppropriate(revenuePercent);
-        
+
         // Assert
         isApproved.Should().BeFalse();
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(InvalidProposalDto))]
+    public void ShouldThrowArgumentException_WhenNegativeValues(ProposalDto proposalDto)
+    {
+        //Arrange
+        var revenuePercent = 30;
+
+        //Act
+        var isApprovedAct = () => proposalDto.IsAppropriate(revenuePercent);
+
+        //Assert
+        isApprovedAct.Should().Throw<ArgumentException>();
+
+    }
+
+
+    public static IEnumerable<object[]> InvalidProposalDto
+    {
+        get
+        {
+            yield return new ProposalDto[]
+            {
+                new()
+                {
+                    CompanyNumber = -1,
+                    CompanyName = "Mindbox",
+                    CompanyEmail = "test@mindbox.cloud",
+                    EmployeesAmount = 101
+                }
+            };
+            yield return new ProposalDto[]
+            {
+                new()
+                {
+                    CompanyNumber = 1,
+                    CompanyName = "Mindbox",
+                    CompanyEmail = "test@mindbox.cloud",
+                    EmployeesAmount = -1
+                }
+            };
+        }
     }
 }
