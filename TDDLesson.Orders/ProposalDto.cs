@@ -17,6 +17,7 @@ public static class ProposalDtoExtensions
         this ProposalDto proposalDto,
         float revenuePercent)
     {
+        if (proposalDto.EmployeesAmount <= 100) return false; 
         return true;
     }
 }
