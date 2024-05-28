@@ -46,7 +46,7 @@ public sealed class StatusEvaluatorTests
     public void Evaluate_CompanyEmployeesAmountLessThan500_DateSatisfyRange_Processed(string dateString)
     {
         // Arrange
-        var dto = CreateDto(400);
+        var dto = CreateDto(500);
         var date = DateTime.Parse(dateString);
 
         // Act
