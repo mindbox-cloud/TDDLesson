@@ -37,7 +37,7 @@ public class AccreditationProposalProcessor
         var status = StatusEvaluator.Evaluate(dto, dateTime, revenuePercent);
 
         var (subject, body) = MessageMapper.MapMessage(status);
-        _emailClient.SendEmail(dto.CompanyEmail, subject, body);
+        await _emailClient.SendEmail(dto.CompanyEmail, subject, body);
 
         var processedProposal = new ProcessedProposal(dto, dateTime, status);
         if (status is not ProposalStatus.Declined)
