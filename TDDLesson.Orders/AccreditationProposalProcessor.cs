@@ -5,22 +5,42 @@ public class AccreditationProposalProcessor(
     IRepository processedProposalRepository,
     IEmailClient emailClient)
 {
+    private readonly IRevenueService _revenueService;
+    private readonly IRepository _orderRepository;
+    private readonly IEmailClient _emailClient;
+
+    public AccreditationProposalProcessor(IRevenueService revenueService, IRepository orderRepository, IEmailClient emailClient)
+    {
+        _revenueService = revenueService;
+        _orderRepository = orderRepository;
+        _emailClient = emailClient;
+    }
+    
     public async Task HandleProposal(ProposalDto dto)
     {
         var dateTime = DateTime.Now;
 
-        ValidateService.Validate(dto);
+        var validationResult = ValidateService.Validate(dto);
 
-        var revenuePercent = revenueService.GetRevenuePercent(dto.CompanyNumber);
+        if (validationResult.ValidationStatus == ValidationStatus.Invalid)
+        {
+            return new ProcessingResult(ProcessingStatus.NotProcessed)
+            {
+                Message = validationResult.Message
+            };
+        }
 
-        var status = StatusEvaluator.Evaluate(dto, dateTime, revenuePercent);
+        var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
+
+        var status = StatusEvaluator.Evaluate(dto, utcNow, revenuePercent);
 
         var (subject, body) = MessageMapper.MapMessage(status);
-
         emailClient.SendEmail(dto.CompanyEmail, subject, body);
 
         var processedProposal = new ProcessedProposal(dto, dateTime, status);
         if (status is not ProposalStatus.Declined)
             await processedProposalRepository.SaveAsync(processedProposal);
+        
+        return new ProcessingResult(ProcessingStatus.Processed);
     }
 }
