@@ -10,3 +10,13 @@ public sealed record ProposalDto
     
     public required int EmployeesAmount { get; init; }
 }
+
+public static class ProposalDtoExtensions
+{
+    public static bool IsAppropriate(
+        this ProposalDto proposalDto,
+        float revenuePercent)
+    {
+        return false;
+    }
+}
