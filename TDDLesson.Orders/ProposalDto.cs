@@ -17,6 +17,6 @@ public static class ProposalDtoExtensions
         this ProposalDto proposalDto,
         float revenuePercent)
     {
-        return false;
+        return true;
     }
 }
