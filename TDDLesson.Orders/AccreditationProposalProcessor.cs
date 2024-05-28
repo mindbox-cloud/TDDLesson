@@ -23,7 +23,7 @@ public class AccreditationProposalProcessor
 
         var status = StatusEvaluator.Evaluate(dto, utcNow, revenuePercent);
 
-        var (subject, body) = NotificationRenderer.Render(dto, status);
+        var (subject, body) = MessageMapper.MapMessage(status);
 
         _emailClient.SendEmail(dto.CompanyEmail, subject, body);
     }
