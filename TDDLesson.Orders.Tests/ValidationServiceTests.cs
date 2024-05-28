@@ -4,7 +4,7 @@ using TDDLesson.Responses;
 namespace TDDLesson.Orders.Tests;
 
 [TestClass]
-public class ValidateServiceTests
+public class ValidationServiceTests
 {
     [TestMethod]
     public void Validate_EmptyCompanyName_ReturnsInvalidStatusAndMessage()
@@ -13,10 +13,10 @@ public class ValidateServiceTests
         var proposalDto = CreateProposalDto(companyName: "");
         
         // Act
-        var result = ValidateService.Validate(proposalDto);
+        var result = ValidationService.Validate(proposalDto);
 
         // Assert
-        Assert.AreEqual(ValidateService.EmptyCompanyNameMessage, result.Message);
+        Assert.AreEqual(ValidationService.EmptyCompanyNameMessage, result.Message);
         Assert.AreEqual(ValidationStatus.Invalid, result.ValidationStatus);
     }
 
@@ -27,10 +27,10 @@ public class ValidateServiceTests
         var proposalDto = CreateProposalDto(companyEmail: "");
         
         // Act
-        var result = ValidateService.Validate(proposalDto);
+        var result = ValidationService.Validate(proposalDto);
 
         // Assert
-        Assert.AreEqual(ValidateService.EmptyCompanyEmailMessage, result.Message);
+        Assert.AreEqual(ValidationService.EmptyCompanyEmailMessage, result.Message);
         Assert.AreEqual(ValidationStatus.Invalid, result.ValidationStatus);
     }
 
@@ -41,10 +41,10 @@ public class ValidateServiceTests
         var proposalDto = CreateProposalDto(companyEmail: "invalid-email");
         
         // Act
-        var result = ValidateService.Validate(proposalDto);
+        var result = ValidationService.Validate(proposalDto);
 
         // Assert
-        Assert.AreEqual(ValidateService.CompanyEmailIsNotValidMessage, result.Message);
+        Assert.AreEqual(ValidationService.CompanyEmailIsNotValidMessage, result.Message);
         Assert.AreEqual(ValidationStatus.Invalid, result.ValidationStatus);
     }
 
@@ -55,7 +55,7 @@ public class ValidateServiceTests
         var proposalDto = CreateProposalDto();
 
         // Act
-        var result = ValidateService.Validate(proposalDto);
+        var result = ValidationService.Validate(proposalDto);
         
         // Assert
         Assert.IsNull(result.Message);

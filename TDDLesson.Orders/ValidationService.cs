@@ -3,7 +3,7 @@ using TDDLesson.Responses;
 
 namespace TDDLesson;
 
-public static class ValidateService
+public static class ValidationService
 {
     public const string EmptyCompanyNameMessage = "Company name is empty";
     public const string EmptyCompanyEmailMessage = "Company email is empty";

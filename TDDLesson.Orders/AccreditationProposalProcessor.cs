@@ -22,7 +22,7 @@ public class AccreditationProposalProcessor
     {
         var dateTime = DateTime.Now;
 
-        var validationResult = ValidateService.Validate(dto);
+        var validationResult = ValidationService.Validate(dto);
 
         if (validationResult.ValidationStatus == ValidationStatus.Invalid)
         {
