@@ -9,9 +9,9 @@ public sealed class StatusEvaluatorTests
     private static readonly DateTime UtcNow = DateTime.UtcNow;
 
     [TestMethod]
-    [DataRow(100, 0.30)]
-    [DataRow(101, 0.30)]
-    [DataRow(99, 0.31)]
+    [DataRow(100, 0.30f)]
+    [DataRow(101, 0.30f)]
+    [DataRow(99, 0.31f)]
     public void Evaluate_CompanyDoesNotSatisfyRequirements_Declined(int employeesAmount, float revenuePercent)
     {
         // Arrange
