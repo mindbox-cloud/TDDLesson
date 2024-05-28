@@ -48,4 +48,25 @@ public class UnitTest1
         // Assert
         isApproved.Should().BeFalse();
     }
+    
+    [TestMethod]
+    public void ShouldNotApproveProposal_WhenNotEnoughRevenuePercent()
+    {
+        // Arrange
+        var proposal = new ProposalDto
+        {
+            CompanyNumber = 1,
+            CompanyName = "Mindbox",
+            CompanyEmail = "test@mindbox.cloud",
+            EmployeesAmount = 101
+        };
+
+        var revenuePercent = 30;
+        
+        // Act
+        var isApproved = proposal.IsAppropriate(revenuePercent);
+        
+        // Assert
+        isApproved.Should().BeFalse();
+    }
 }
