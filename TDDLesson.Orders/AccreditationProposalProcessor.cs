@@ -34,7 +34,7 @@ public class AccreditationProposalProcessor
 
         var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
 
-        var status = StatusEvaluator.Evaluate(dto, dateTime, revenuePercent);
+        var status = StatusEvaluator.Evaluate(dto.EmployeesAmount, dateTime, revenuePercent);
 
         var (subject, bodyTemplate) = MessageMapper.MapMessage(status);
         var body = MessageRenderer.RenderBody(dto.CompanyName, bodyTemplate);

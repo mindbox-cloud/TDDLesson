@@ -10,15 +10,15 @@ public static class StatusEvaluator
     private static readonly DateTime StartDate = new(2024, 6, 1);
     private static readonly DateTime EndDate = new(2024, 8, 31);
 
-    public static ProposalStatus Evaluate(ProposalDto proposalDto, DateTime date, float revenuePercent)
+    public static ProposalStatus Evaluate(int employeesAmount, DateTime date, float revenuePercent)
     {
-        if (!DoesCompanySatisfyRequirements(proposalDto.EmployeesAmount, revenuePercent))
+        if (!DoesCompanySatisfyRequirements(employeesAmount, revenuePercent))
             return ProposalStatus.Declined;
         
         if (!DoesDateSatisfyRange(date))
             return ProposalStatus.Processed;
 
-        return proposalDto.EmployeesAmount > MinRequiredEmployeesAmountForInviting
+        return employeesAmount > MinRequiredEmployeesAmountForInviting
             ? ProposalStatus.ProcessedAndInvited
             : ProposalStatus.Processed;
     }
