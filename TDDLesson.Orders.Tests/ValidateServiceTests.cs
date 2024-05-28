@@ -1,7 +1,7 @@
 using TDDLesson;
 using TDDLesson.Responses;
 
-namespace TestProject1;
+namespace TDDLesson.Orders.Tests;
 
 [TestClass]
 public class ValidateServiceTests
