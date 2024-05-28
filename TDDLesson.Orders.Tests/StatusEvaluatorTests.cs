@@ -1,7 +1,8 @@
 using FluentAssertions;
+using TDDLesson;
 using TDDLesson.Responses;
 
-namespace TDDLesson.Orders.Tests;
+namespace TestProject1;
 
 [TestClass]
 public sealed class StatusEvaluatorTests
@@ -15,7 +16,7 @@ public sealed class StatusEvaluatorTests
     public void Evaluate_CompanyDoesNotSatisfyRequirements_Declined(int employeesAmount, float revenuePercent)
     {
         // Arrange
-        var dto = TestHelper.CreateProposalDto(employeesAmount: employeesAmount);
+        var dto = CreateDto(employeesAmount);
 
         // Act
         var status = StatusEvaluator.Evaluate(dto, UtcNow, revenuePercent);
@@ -30,7 +31,7 @@ public sealed class StatusEvaluatorTests
     public void Evaluate_CompanyEmployeesAmountLessThan500_Processed(int employeesAmount)
     {
         // Arrange
-        var dto = TestHelper.CreateProposalDto(employeesAmount: employeesAmount);
+        var dto = CreateDto(employeesAmount);
 
         // Act
         var status = StatusEvaluator.Evaluate(dto, UtcNow, 0.5f);
@@ -46,7 +47,7 @@ public sealed class StatusEvaluatorTests
     public void Evaluate_CompanyEmployeesAmountLessThan500_DateSatisfyRange_Processed(string dateString)
     {
         // Arrange
-        var dto = TestHelper.CreateProposalDto(employeesAmount: 500);
+        var dto = CreateDto(500);
         var date = DateTime.Parse(dateString);
 
         // Act
@@ -62,7 +63,7 @@ public sealed class StatusEvaluatorTests
     public void Evaluate_CompanyEmployeesAmountMoreThan500_DateDoesNotSatisfyRange_Processed(string dateString)
     {
         // Arrange
-        var dto = TestHelper.CreateProposalDto(employeesAmount: 501);
+        var dto = CreateDto(501);
         var date = DateTime.Parse(dateString);
 
         // Act
@@ -79,7 +80,7 @@ public sealed class StatusEvaluatorTests
     public void Evaluate_CompanyEmployeesAmountMoreThan500_DateSatisfiesRange_ProcessedAndInvited(string dateString)
     {
         // Arrange
-        var dto = TestHelper.CreateProposalDto(employeesAmount: 501);
+        var dto = CreateDto(501);
         var date = DateTime.Parse(dateString);
 
         // Act
@@ -87,5 +88,16 @@ public sealed class StatusEvaluatorTests
 
         // Assert
         status.Should().Be(ProposalStatus.ProcessedAndInvited);
+    }
+
+    private static ProposalDto CreateDto(int employeesAmount)
+    {
+        return new ProposalDto
+        {
+            EmployeesAmount = employeesAmount,
+            CompanyNumber = 42,
+            CompanyName = "Mindbox",
+            CompanyEmail = "mindbox@mindbox.cloud"
+        };
     }
 }

@@ -9,7 +9,7 @@ public class ValidationServiceTests
     public void Validate_EmptyCompanyName_ReturnsInvalidStatusAndMessage()
     {
         // Arrange
-        var proposalDto = TestHelper.CreateProposalDto(companyName: "");
+        var proposalDto = CreateProposalDto(companyName: "");
         
         // Act
         var result = ValidationService.Validate(proposalDto);
@@ -23,7 +23,7 @@ public class ValidationServiceTests
     public void Validate_EmptyCompanyEmail_ReturnsInvalidStatusAndMessage()
     {
         // Arrange
-        var proposalDto = TestHelper.CreateProposalDto(companyEmail: "");
+        var proposalDto = CreateProposalDto(companyEmail: "");
         
         // Act
         var result = ValidationService.Validate(proposalDto);
@@ -37,7 +37,7 @@ public class ValidationServiceTests
     public void Validate_CompanyEmailIsNotValid_ReturnsInvalidStatusAndMessage()
     {
         // Arrange
-        var proposalDto = TestHelper.CreateProposalDto(companyEmail: "invalid-email");
+        var proposalDto = CreateProposalDto(companyEmail: "invalid-email");
         
         // Act
         var result = ValidationService.Validate(proposalDto);
@@ -51,7 +51,7 @@ public class ValidationServiceTests
     public void Validate_DataIsCorrect_ReturnsValidStatusWithoutMessage()
     {
         // Arrange
-        var proposalDto = TestHelper.CreateProposalDto();
+        var proposalDto = CreateProposalDto();
 
         // Act
         var result = ValidationService.Validate(proposalDto);
@@ -59,5 +59,20 @@ public class ValidationServiceTests
         // Assert
         Assert.IsNull(result.Message);
         Assert.AreEqual(ValidationStatus.Valid, result.ValidationStatus);
+    }
+
+    private static ProposalDto CreateProposalDto(
+        int companyNumber = 1,
+        string companyName = "Test Company",
+        string companyEmail = "test@example.com",
+        int employeesAmount = 101)
+    {
+        return new ProposalDto
+        {
+            CompanyNumber = companyNumber,
+            CompanyName = companyName,
+            CompanyEmail = companyEmail,
+            EmployeesAmount = employeesAmount
+        };
     }
 }
