@@ -13,6 +13,16 @@ public class AccreditationProposalProcessor
     
     public async Task HandleProposal(ProposalDto dto)
     {
+        // ValidateService.Validate(dto)
         
+        // RevenueService.GetRevenuePercent(int companyNumber)
+        
+        // StatusEvaluator.Evaluate(proposalDto, revenue, datetime)
+        
+        // NotificationRenderer.Render(proposalDto, status)
+        
+        // IEmailClient.SendEmail(string mailTo, string subject, string body)
+        
+        // Repository.Save(entity)
     }
 }
