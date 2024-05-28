@@ -4,25 +4,27 @@ public class AccreditationProposalProcessor
 {
     private readonly IRevenueService _revenueService;
     private readonly IRepository _orderRepository;
+    private readonly IEmailClient _emailClient;
 
-    public AccreditationProposalProcessor(IRevenueService revenueService, IRepository orderRepository)
+    public AccreditationProposalProcessor(IRevenueService revenueService, IRepository orderRepository, IEmailClient emailClient)
     {
         _revenueService = revenueService;
         _orderRepository = orderRepository;
+        _emailClient = emailClient;
     }
     
     public async Task HandleProposal(ProposalDto dto)
     {
-        // ValidateService.Validate(dto)
-        
-        // RevenueService.GetRevenuePercent(int companyNumber)
-        
-        // StatusEvaluator.Evaluate(proposalDto, revenue, datetime)
-        
-        // NotificationRenderer.Render(proposalDto, status)
-        
-        // IEmailClient.SendEmail(string mailTo, string subject, string body)
-        
-        // Repository.Save(entity)
+        var utcNow = DateTime.UtcNow;
+
+        ValidateService.Validate(dto);
+
+        var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
+
+        var status = StatusEvaluator.Evaluate(dto, utcNow, revenuePercent);
+
+        var (subject, body) = NotificationRenderer.Render(dto, status);
+
+        _emailClient.SendEmail(dto.CompanyEmail, subject, body);
     }
 }
