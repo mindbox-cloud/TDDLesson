@@ -81,11 +81,9 @@ public class UnitTest1
 
         //Assert
         isApprovedAct.Should().Throw<ArgumentException>();
-
     }
 
-
-    public static IEnumerable<object[]> InvalidProposalDto
+    private static IEnumerable<object[]> InvalidProposalDto
     {
         get
         {
@@ -110,5 +108,27 @@ public class UnitTest1
                 }
             };
         }
+    }
+
+
+    [TestMethod]
+    public void ShouldBuildInvitationalMessage_WhenProposalIsAppropriate()
+    {
+        // Arrange
+        var proposal = new ProposalDto
+        {
+            CompanyNumber = 1,
+            CompanyName = "Mindbox",
+            CompanyEmail = "test@mindbox.cloud",
+            EmployeesAmount = 501
+        };
+
+        var processingDateTimeUtc = new DateOnly(2024, 06, 01);
+
+        // Act
+        var invitationalMessage = NotificationsHelper.BuildInvitationalMessage(proposal, processingDateTimeUtc);
+
+        // Assert
+        invitationalMessage.Should().Be((proposal.CompanyEmail, "Invitation to forum", "<p>Hello!</p>"));
     }
 }
