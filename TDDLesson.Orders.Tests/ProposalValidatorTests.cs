@@ -6,14 +6,12 @@ namespace TestProject1;
 [TestClass]
 public class ProposalValidatorTests
 {
-    private readonly ProposalValidator _proposalValidator = new();
-    
     [TestMethod]
-    public void IsProposalValid_IsValid_True()
+    public void ShouldBeValid_WhenEmployeesAndRevenueInCorrectInterval()
     {
         var request = new ProposalValidationRequest(101, 31);
 
-        var result = _proposalValidator.IsProposalValid(request);
+        var result = ProposalValidator.IsProposalValid(request);
 
         result.Should().BeTrue();
     }
@@ -21,11 +19,11 @@ public class ProposalValidatorTests
     [TestMethod]
     [DataRow(100)]
     [DataRow(50)]
-    public void IsProposalValid_EmployeeAmountIsInvalid_False(int employeeAmount)
+    public void ShouldBeInvalid_WhenEmployeesNumberLessThan100(int employeeAmount)
     {
         var request = new ProposalValidationRequest(employeeAmount, 31);
 
-        var result = _proposalValidator.IsProposalValid(request);
+        var result = ProposalValidator.IsProposalValid(request);
 
         result.Should().BeFalse();
     }
@@ -33,11 +31,11 @@ public class ProposalValidatorTests
     [TestMethod]
     [DataRow(30)]
     [DataRow(15)]
-    public void IsProposalValid_ItRevenuePercentIsInvalid_False(int itRevenuePercent)
+    public void ShouldBeInvalid_WhenRevenueAmountLessThan30(int itRevenuePercent)
     {
         var request = new ProposalValidationRequest(101, itRevenuePercent);
 
-        var result = _proposalValidator.IsProposalValid(request);
+        var result = ProposalValidator.IsProposalValid(request);
 
         result.Should().BeFalse();
     }

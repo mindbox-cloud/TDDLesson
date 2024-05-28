@@ -1,8 +1,8 @@
 ﻿namespace TDDLesson;
 
-public class ProposalValidator
+public static class ProposalValidator
 {
-    public bool IsProposalValid(ProposalValidationRequest proposalValidationRequest)
+    public static bool IsProposalValid(ProposalValidationRequest proposalValidationRequest)
     {
         if (proposalValidationRequest.EmployeesAmount <= 100)
             return false;
