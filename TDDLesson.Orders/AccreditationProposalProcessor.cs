@@ -1,30 +1,26 @@
 ﻿namespace TDDLesson;
 
-public class AccreditationProposalProcessor
+public class AccreditationProposalProcessor(
+    IRevenueService revenueService,
+    IRepository processedProposalRepository,
+    IEmailClient emailClient)
 {
-    private readonly IRevenueService _revenueService;
-    private readonly IRepository _orderRepository;
-    private readonly IEmailClient _emailClient;
-
-    public AccreditationProposalProcessor(IRevenueService revenueService, IRepository orderRepository, IEmailClient emailClient)
-    {
-        _revenueService = revenueService;
-        _orderRepository = orderRepository;
-        _emailClient = emailClient;
-    }
-    
     public async Task HandleProposal(ProposalDto dto)
     {
-        var utcNow = DateTime.UtcNow;
+        var dateTime = DateTime.Now;
 
         ValidateService.Validate(dto);
 
-        var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
+        var revenuePercent = revenueService.GetRevenuePercent(dto.CompanyNumber);
 
-        var status = StatusEvaluator.Evaluate(dto, utcNow, revenuePercent);
+        var status = StatusEvaluator.Evaluate(dto, dateTime, revenuePercent);
 
         var (subject, body) = MessageMapper.MapMessage(status);
 
-        _emailClient.SendEmail(dto.CompanyEmail, subject, body);
+        emailClient.SendEmail(dto.CompanyEmail, subject, body);
+
+        var processedProposal = new ProcessedProposal(dto, dateTime, status);
+        if (status is not ProposalStatus.Declined)
+            await processedProposalRepository.SaveAsync(processedProposal);
     }
 }
