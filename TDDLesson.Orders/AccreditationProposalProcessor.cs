@@ -1,4 +1,6 @@
-﻿namespace TDDLesson;
+﻿using TDDLesson.Responses;
+
+namespace TDDLesson;
 
 public class AccreditationProposalProcessor
 {
@@ -13,11 +15,19 @@ public class AccreditationProposalProcessor
         _emailClient = emailClient;
     }
     
-    public async Task HandleProposal(ProposalDto dto)
+    public async Task<ProcessingResult> HandleProposal(ProposalDto dto)
     {
         var utcNow = DateTime.UtcNow;
 
-        ValidateService.Validate(dto);
+        var validationResult = ValidateService.Validate(dto);
+
+        if (validationResult.ValidationStatus == ValidationStatus.Invalid)
+        {
+            return new ProcessingResult(ProcessingStatus.NotProcessed)
+            {
+                Message = validationResult.Message
+            };
+        }
 
         var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
 
@@ -25,6 +35,8 @@ public class AccreditationProposalProcessor
 
         var (subject, body) = MessageMapper.MapMessage(status);
 
-        _emailClient.SendEmail(dto.CompanyEmail, subject, body);
+        await _emailClient.SendEmail(dto.CompanyEmail, subject, body);
+
+        return new ProcessingResult(ProcessingStatus.Processed);
     }
 }

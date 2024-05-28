@@ -1,4 +1,4 @@
-namespace TDDLesson;
+namespace TDDLesson.Responses;
 
 public enum ProposalStatus
 {
