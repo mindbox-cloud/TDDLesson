@@ -13,11 +13,12 @@ public sealed record ProposalDto
 
 public static class ProposalDtoExtensions
 {
+    private const int MinEmployeesAmount = 100;
+    private const float MinITRevenuePercent = 30;
     public static bool IsAppropriate(
         this ProposalDto proposalDto,
         float revenuePercent)
     {
-        if (proposalDto.EmployeesAmount <= 100) return false; 
-        return true;
+        return proposalDto.EmployeesAmount > MinEmployeesAmount && revenuePercent > MinITRevenuePercent;
     }
 }
