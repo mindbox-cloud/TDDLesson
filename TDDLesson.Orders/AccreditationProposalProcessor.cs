@@ -1,4 +1,6 @@
-﻿namespace TDDLesson;
+﻿using TDDLesson.Responses;
+
+namespace TDDLesson;
 
 public class AccreditationProposalProcessor(
     IRevenueService revenueService,
@@ -8,15 +10,8 @@ public class AccreditationProposalProcessor(
     private readonly IRevenueService _revenueService;
     private readonly IRepository _orderRepository;
     private readonly IEmailClient _emailClient;
-
-    public AccreditationProposalProcessor(IRevenueService revenueService, IRepository orderRepository, IEmailClient emailClient)
-    {
-        _revenueService = revenueService;
-        _orderRepository = orderRepository;
-        _emailClient = emailClient;
-    }
     
-    public async Task HandleProposal(ProposalDto dto)
+    public async Task<ProcessingResult> HandleProposal(ProposalDto dto)
     {
         var dateTime = DateTime.Now;
 
@@ -32,7 +27,7 @@ public class AccreditationProposalProcessor(
 
         var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
 
-        var status = StatusEvaluator.Evaluate(dto, utcNow, revenuePercent);
+        var status = StatusEvaluator.Evaluate(dto, dateTime, revenuePercent);
 
         var (subject, body) = MessageMapper.MapMessage(status);
         emailClient.SendEmail(dto.CompanyEmail, subject, body);
