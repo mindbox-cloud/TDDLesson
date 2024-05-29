@@ -175,7 +175,9 @@ public class UnitTest1
     }
     
     [TestMethod]
-    public void ShouldNotSentNotificationToForum_WhenProposalProcessingDateIsOutOfRange()
+    [DataRow("2024-05-31")]
+    [DataRow("2024-09-02")]
+    public void ShouldNotSentNotificationToForum_WhenProposalProcessingDateIsOutOfRange(string processingDate)
     {
         // Arrange
         var proposal = new Proposal(new ProposalDto
@@ -186,7 +188,7 @@ public class UnitTest1
             EmployeesAmount = 501
         });
 
-        var processingDateTimeUtc = new DateOnly(1999, 06, 01);
+        var processingDateTimeUtc = DateOnly.Parse(processingDate);
 
         // Act
         var invitationalMessage = NotificationsHelper.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
