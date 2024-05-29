@@ -6,4 +6,9 @@ public static class NotificationsHelper
    {
       return ("test@mindbox.cloud", "Invitation to forum", "<p>Hello!</p>");
    }
+   
+   public static bool ShouldSentNotificationToForum(Proposal proposal, DateOnly processingDate)
+   {
+      return false;
+   }
 }
