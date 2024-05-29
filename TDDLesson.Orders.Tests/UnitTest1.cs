@@ -152,4 +152,25 @@ public class UnitTest1
         // Assert
         invitationalMessage.Should().BeFalse();
     }
+
+    [TestMethod]
+    public void ShouldSentNotificationToForum_WhenEmployeesAmountIsGreaterThan500()
+    {
+        // Arrange
+        var proposal = new Proposal(new ProposalDto
+        {
+            CompanyNumber = 1,
+            CompanyName = "Mindbox",
+            CompanyEmail = "test@mindbox.cloud",
+            EmployeesAmount = 501
+        });
+
+        var processingDateTimeUtc = new DateOnly(2024, 06, 01);
+
+        // Act
+        var invitationalMessage = NotificationsHelper.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
+
+        // Assert
+        invitationalMessage.Should().BeTrue();
+    }
 }
