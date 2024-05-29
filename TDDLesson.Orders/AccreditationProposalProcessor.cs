@@ -22,12 +22,12 @@ public class AccreditationProposalProcessor
         ValidateProposalDto(dto);
 
         var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
-        
-        var validProposal = ValidateProposal(dto.EmployeesAmount, _revenueService.GetRevenuePercent(dto.CompanyNumber));
 
-        if (!validProposal) return;
+        var proposal = Proposal.Create(dto.CompanyNumber, dto.CompanyName, revenuePercent, dto.EmployeesAmount);
         
         await _orderRepository.SaveAsync(dto);
+        
+        // create email
 
         if (ValidateNotification(DateTime.UtcNow))
         {
@@ -53,17 +53,6 @@ public class AccreditationProposalProcessor
 
         if (proposalDto.CompanyNumber < 0)
             throw new ArgumentException("Company number cannot be negative.", nameof(proposalDto));
-    }
-
-    public static bool ValidateProposal(int employeesCount, float percentOfRevenue)
-    {
-        if (employeesCount < 0)
-            throw new ArgumentException("The number of employees cannot be negative.", nameof(employeesCount));
-
-        if (percentOfRevenue < 0)
-            throw new ArgumentException("The percent of revenue cannot be negative.", nameof(percentOfRevenue));
-
-        return employeesCount > Constants.EmployeesAmount && percentOfRevenue > Constants.RevenuePercent;
     }
 
     public static bool ShouldSendInvitation(int employeeCount)
