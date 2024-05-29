@@ -173,4 +173,25 @@ public class UnitTest1
         // Assert
         invitationalMessage.Should().BeTrue();
     }
+    
+    [TestMethod]
+    public void ShouldNotSentNotificationToForum_WhenProposalProcessingDateIsOutOfRange()
+    {
+        // Arrange
+        var proposal = new Proposal(new ProposalDto
+        {
+            CompanyNumber = 1,
+            CompanyName = "Mindbox",
+            CompanyEmail = "test@mindbox.cloud",
+            EmployeesAmount = 501
+        });
+
+        var processingDateTimeUtc = new DateOnly(1999, 06, 01);
+
+        // Act
+        var invitationalMessage = NotificationsHelper.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
+
+        // Assert
+        invitationalMessage.Should().BeFalse();
+    }   
 }
