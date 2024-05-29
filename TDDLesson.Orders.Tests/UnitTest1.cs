@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Moq;
 using TDDLesson;
 
 namespace TestProject1;
@@ -196,4 +197,46 @@ public class UnitTest1
         // Assert
         invitationalMessage.Should().BeFalse();
     }   
+    
+    //this is should be integration test
+    [TestMethod]
+    public async Task ShouldProposalProcessed_HappyPath()
+    {
+        // Arrange
+        var proposalDto = new ProposalDto
+        {
+            CompanyNumber = 1,
+            CompanyName = "Mindbox",
+            CompanyEmail = "test@mindbox.cloud",
+            EmployeesAmount = 501
+        };
+        var revenueServiceMock = new Mock<IRevenueService>();
+        revenueServiceMock.Setup(r => r.GetRevenuePercent(proposalDto.CompanyNumber)).Returns(31);
+        var revenueService = revenueServiceMock.Object;
+        var orderRepositoryMock = new Mock<IRepository>();
+        var orderRepository = orderRepositoryMock.Object;
+        var emailClientMock = new Mock<IEmailClient>();
+        var emailClient = emailClientMock.Object;
+        
+        
+        var processor = new AccreditationProposalProcessor(
+            revenueService,
+            orderRepository,
+            emailClient);
+        
+        //Act
+        var task = processor.HandleProposal(proposalDto);
+        
+        //Assert
+        emailClientMock.Verify(c => c.SendEmail("test@mindbox.cloud", "Invitation to forum", "<p>Hello!</p>"), Times.Once);
+        emailClientMock.Verify(c => c.SendEmail("test@mindbox.cloud", "ProposalIsProcessed", "<p>Hello!</p>"), Times.Once);
+
+        orderRepositoryMock.Verify(r => r.SaveAsync(It.Is<Proposal>(p =>
+            p.CompanyName == proposalDto.CompanyName 
+            && p.CompanyEmail == proposalDto.CompanyEmail
+            && p.EmployeesAmount == proposalDto.EmployeesAmount
+            && p.CompanyNumber == proposalDto.CompanyNumber)));
+        
+        revenueServiceMock.Verify(r => r.GetRevenuePercent(proposalDto.CompanyNumber), Times.Once);
+    }
 }
