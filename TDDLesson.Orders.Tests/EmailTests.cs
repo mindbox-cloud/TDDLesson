@@ -9,6 +9,25 @@ public class EmailTests
     [DataRow("2024-06-01")]
     [DataRow("2024-09-01")]
     [DataRow("2024-08-05")]
+    public void GetEmailsForProposal_ProposalDateInRange_EmailWithoutInvitationCreated(string dateTime)
+    {
+        var validDate = DateTime.Parse(dateTime);
+        var proposal = Proposal.Create(1,"TestCompany",  0.31f, 200, "test@email.ru");
+        var expected = new List<Email>
+        {
+            new (proposal.CompanyEmail, Constants.SuccessOrderProcessingSubject, Constants.SuccessOrderProcessingBody)
+        };
+        
+        var emails = EmailService.GetEmailsForProposal(proposal, validDate);
+
+        emails.Should().HaveCount(1);
+        emails.Should().BeEquivalentTo(expected);
+    }
+
+    [TestMethod]
+    [DataRow("2024-06-01")]
+    [DataRow("2024-09-01")]
+    [DataRow("2024-08-05")]
     public void GetEmailsForProposal_CompanyMeetsRequirements_EmailWithInvitationCreated(string dateTime)
     {
         var validDate = DateTime.Parse(dateTime);
@@ -26,47 +45,16 @@ public class EmailTests
     }
 
     [TestMethod]
-    [DataRow("2024-06-01")]
-    [DataRow("2024-09-01")]
-    [DataRow("2024-08-05")]
-    public void ValidateNotification_DateTimeInRange_Success(string dateTime)
-    {
-        var validDate = DateTime.Parse(dateTime);
-        var shouldNotify = AccreditationProposalProcessor.ValidateNotification(validDate);
-
-        shouldNotify.Should().BeTrue();
-    }
-    
-    [TestMethod]
     [DataRow("2024-05-31")]
     [DataRow("2024-09-02")]
     [DataRow("2023-08-05")]
-    public void ValidateNotification_DateTimeOutOfRange_Failed(string dateTime)
+    public void GetEmailsForProposal_ProposalDateOutOfRange_EmailNotCreated(string dateTime)
     {
         var validDate = DateTime.Parse(dateTime);
-        var shouldNotify = AccreditationProposalProcessor.ValidateNotification(validDate);
+        var proposal = Proposal.Create(1,"TestCompany",  0.31f, 501, "test@email.ru");
+        
+        var emails = EmailService.GetEmailsForProposal(proposal, validDate);
 
-        shouldNotify.Should().BeFalse();
-    }
-
-    [TestMethod]
-    [DataRow(501)]
-    [DataRow(1000)]
-    public void ShouldSentInvitation_EnoughEmployeeCount_True(int employeeCount)
-    {
-        var shouldSendInvitation = AccreditationProposalProcessor.ShouldSendInvitation(employeeCount);
-
-        shouldSendInvitation.Should().BeTrue();
-    }
-    
-    [TestMethod]
-    [DataRow(500)]
-    [DataRow(200)]
-    [DataRow(101)]
-    public void ShouldSentInvitation_NotEnoughEmployeeCount_False(int employeeCount)
-    {
-        var shouldSendInvitation = AccreditationProposalProcessor.ShouldSendInvitation(employeeCount);
-
-        shouldSendInvitation.Should().BeFalse();
+        emails.Should().BeEmpty();
     }
 }
