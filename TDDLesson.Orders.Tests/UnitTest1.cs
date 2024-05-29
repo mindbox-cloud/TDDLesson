@@ -133,7 +133,7 @@ public class UnitTest1
     }
 
     [TestMethod]
-    public void ShouldNotSentNotificationToForum_WhenEmployeesAmountLessThan500()
+    public void ShouldNotSentNotificationToForum_WhenEmployeesAmountLessOrEqualThan500()
     {
         // Arrange
         var proposal = new Proposal(new ProposalDto
@@ -141,7 +141,7 @@ public class UnitTest1
             CompanyNumber = 1,
             CompanyName = "Mindbox",
             CompanyEmail = "test@mindbox.cloud",
-            EmployeesAmount = 499
+            EmployeesAmount = 500
         });
 
         var processingDateTimeUtc = new DateOnly(2024, 06, 01);
