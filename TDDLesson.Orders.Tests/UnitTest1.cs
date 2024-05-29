@@ -127,7 +127,7 @@ public class UnitTest1
         var processingDateTimeUtc = new DateOnly(2024, 06, 01);
 
         // Act
-        var invitationalMessage = NotificationsHelper.BuildInvitationalMessage(proposal);
+        var invitationalMessage = MessageBuilder.BuildInvitationalMessage(proposal);
 
         // Assert
         invitationalMessage.Should().Be((proposal.CompanyEmail, "Invitation to forum", "<p>Hello!</p>"));
@@ -148,7 +148,7 @@ public class UnitTest1
         var processingDateTimeUtc = new DateOnly(2024, 06, 01);
 
         // Act
-        var invitationalMessage = NotificationsHelper.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
+        var invitationalMessage = ForumInvitationManager.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
 
         // Assert
         invitationalMessage.Should().BeFalse();
@@ -169,12 +169,12 @@ public class UnitTest1
         var processingDateTimeUtc = new DateOnly(2024, 06, 01);
 
         // Act
-        var invitationalMessage = NotificationsHelper.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
+        var invitationalMessage = ForumInvitationManager.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
 
         // Assert
         invitationalMessage.Should().BeTrue();
     }
-    
+
     [TestMethod]
     [DataRow("2024-05-31")]
     [DataRow("2024-09-02")]
@@ -192,12 +192,12 @@ public class UnitTest1
         var processingDateTimeUtc = DateOnly.Parse(processingDate);
 
         // Act
-        var invitationalMessage = NotificationsHelper.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
+        var invitationalMessage = ForumInvitationManager.ShouldSentNotificationToForum(proposal, processingDateTimeUtc);
 
         // Assert
         invitationalMessage.Should().BeFalse();
-    }   
-    
+    }
+
     //this is should be integration test
     [TestMethod]
     public async Task ShouldProposalProcessed_HappyPath()
@@ -220,27 +220,31 @@ public class UnitTest1
         var dateTimeMock = new Mock<IDateTimeProvider>();
         dateTimeMock.Setup(p => p.GetDateTimeUtcNow())
             .Returns(new DateTime(2024, 06, 02));
-        
-        
+
+
         var processor = new AccreditationProposalProcessor(
             revenueService,
             orderRepository,
             emailClient,
             dateTimeMock.Object);
-        
+
         //Act
         await processor.HandleProposal(proposalDto);
-        
+
         //Assert
-        emailClientMock.Verify(c => c.SendEmail("test@mindbox.cloud", "Invitation to forum", "<p>Hello!</p>"), Times.Once);
-        emailClientMock.Verify(c => c.SendEmail("test@mindbox.cloud", "Revenue approved", "<p>Hello!</p>"), Times.Once);
+        emailClientMock.Verify(
+            c => c.SendEmail("test@mindbox.cloud", ForumInvitationManager.InvitationToForumSubject,
+                ForumInvitationManager.InvitationToForumBody), Times.Once);
+        emailClientMock.Verify(
+            c => c.SendEmail("test@mindbox.cloud", MessageBuilder.ApprovalSubject, MessageBuilder.ApprovalBody),
+            Times.Once);
 
         orderRepositoryMock.Verify(r => r.SaveAsync(It.Is<Proposal>(p =>
-            p.CompanyName == proposalDto.CompanyName 
+            p.CompanyName == proposalDto.CompanyName
             && p.CompanyEmail == proposalDto.CompanyEmail
             && p.EmployeesAmount == proposalDto.EmployeesAmount
             && p.CompanyNumber == proposalDto.CompanyNumber)));
-        
+
         revenueServiceMock.Verify(r => r.GetRevenuePercent(proposalDto.CompanyNumber), Times.Once);
     }
 }
