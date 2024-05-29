@@ -23,9 +23,9 @@ public class AccreditationProposalProcessor
 
         var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
 
-        var proposal = Proposal.Create(dto.CompanyNumber, dto.CompanyName, revenuePercent, dto.EmployeesAmount);
+        var proposal = Proposal.Create(dto.CompanyNumber, dto.CompanyName, revenuePercent, dto.EmployeesAmount, dto.CompanyEmail);
         
-        await _orderRepository.SaveAsync(dto);
+        await _orderRepository.SaveAsync(proposal);
         
         // create email
 

@@ -7,7 +7,9 @@ public record Proposal
     public float RevenuePercent { get; init; }
     public int EmployeesAmount { get; init; }
 
-    public static Proposal Create(int companyNumber, string companyName, float revenuePercent, int employeesAmount)
+    public string CompanyEmail { get; init; } = null!;
+
+    public static Proposal Create(int companyNumber, string companyName, float revenuePercent, int employeesAmount, string companyEmail)
     {
         Validate(employeesAmount, revenuePercent);
         
@@ -16,7 +18,8 @@ public record Proposal
             CompanyNumber = companyNumber,
             CompanyName = companyName,
             RevenuePercent = revenuePercent,
-            EmployeesAmount = employeesAmount
+            EmployeesAmount = employeesAmount,
+            CompanyEmail = companyEmail
         };
     }
     

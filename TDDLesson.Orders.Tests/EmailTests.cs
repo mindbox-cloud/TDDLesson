@@ -9,6 +9,26 @@ public class EmailTests
     [DataRow("2024-06-01")]
     [DataRow("2024-09-01")]
     [DataRow("2024-08-05")]
+    public void GetEmailsForProposal_CompanyMeetsRequirements_EmailWithInvitationCreated(string dateTime)
+    {
+        var validDate = DateTime.Parse(dateTime);
+        var proposal = Proposal.Create(1,"TestCompany",  0.31f, 501, "test@email.ru");
+        var expected = new List<Email>
+        {
+            new (proposal.CompanyEmail, Constants.SuccessOrderProcessingSubject, Constants.SuccessOrderProcessingBody),
+            new (proposal.CompanyEmail, Constants.ForumInvitationSubject, $"{proposal.CompanyName}! " + Constants.ForumInvitationBody)
+        };
+        
+        var emails = EmailService.GetEmailsForProposal(proposal, validDate);
+
+        emails.Should().HaveCount(2);
+        emails.Should().BeEquivalentTo(expected);
+    }
+
+    [TestMethod]
+    [DataRow("2024-06-01")]
+    [DataRow("2024-09-01")]
+    [DataRow("2024-08-05")]
     public void ValidateNotification_DateTimeInRange_Success(string dateTime)
     {
         var validDate = DateTime.Parse(dateTime);

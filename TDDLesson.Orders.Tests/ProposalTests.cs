@@ -12,8 +12,9 @@ public class ProposalTests
         var companyName = "TestCompany";
         var revenuePercent = 0.31f;
         var employeesAmount = 101;
+        var companyEmail = "test@email.ru";
 
-        var proposal = Proposal.Create(companyNumber, companyName, revenuePercent, employeesAmount);
+        var proposal = Proposal.Create(companyNumber, companyName, revenuePercent, employeesAmount, companyEmail);
 
         proposal.CompanyNumber.Should().Be(companyNumber);
         proposal.CompanyName.Should().Be(companyName);
@@ -28,8 +29,9 @@ public class ProposalTests
         var companyName = "TestCompany";
         var revenuePercent = 0.31f;
         var employeesAmount = 99;
+        var companyEmail = "test@email.ru";
 
-        FluentActions.Invoking(() => Proposal.Create(companyNumber, companyName, revenuePercent, employeesAmount))
+        FluentActions.Invoking(() => Proposal.Create(companyNumber, companyName, revenuePercent, employeesAmount, companyEmail))
             .Should()
             .Throw<ArgumentException>()
             .WithMessage($"Employees amount must be more than {Constants.EmployeesAmount}");
@@ -42,8 +44,9 @@ public class ProposalTests
         var companyName = "TestCompany";
         var revenuePercent = 0.29f;
         var employeesAmount = 101;
+        var companyEmail = "test@email.ru";
 
-        FluentActions.Invoking(() => Proposal.Create(companyNumber, companyName, revenuePercent, employeesAmount))
+        FluentActions.Invoking(() => Proposal.Create(companyNumber, companyName, revenuePercent, employeesAmount, companyEmail))
             .Should()
             .Throw<ArgumentException>()
             .WithMessage($"Revenue percent must be more than {Constants.RevenuePercent}");
