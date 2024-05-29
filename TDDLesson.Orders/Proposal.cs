@@ -3,7 +3,7 @@
 public class Proposal
 {
     private const int MinEmployeesAmount = 100;
-    private const float MinITRevenuePercent = 30;
+    private const float MinITRevenuePercent = 0.3f;
     
     public Proposal(ProposalDto proposalDto)
     {
@@ -29,6 +29,14 @@ public class Proposal
 
     public bool IsAppropriate(float revenuePercent)
     {
+        Validate(revenuePercent);
         return EmployeesAmount > MinEmployeesAmount && revenuePercent > MinITRevenuePercent;
+    }
+    private static void Validate(float revenuePercent)
+    {
+        if (revenuePercent is < 0 or > 1)
+        {
+            throw new ArgumentException("Incorrect revenue percent");
+        }
     }
 }

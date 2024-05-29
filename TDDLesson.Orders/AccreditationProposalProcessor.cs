@@ -27,12 +27,12 @@ public class AccreditationProposalProcessor
         if (proposal.IsAppropriate(revenue))
         {
             var approvalMessage = MessageBuilder.BuildApprovalMessage(proposal);
-            _emailClient.SendEmail(approvalMessage.Item1, approvalMessage.Item2, approvalMessage.Item3);
+            _emailClient.SendEmail(approvalMessage.Email, approvalMessage.Subject, approvalMessage.Body);
         }
         if (ForumInvitationManager.ShouldSentNotificationToForum(proposal, DateOnly.FromDateTime(_dateTimeProvider.GetDateTimeUtcNow())))
         {
             var approvalMessage = MessageBuilder.BuildInvitationalMessage(proposal);
-            _emailClient.SendEmail(approvalMessage.Item1, approvalMessage.Item2, approvalMessage.Item3);
+            _emailClient.SendEmail(approvalMessage.Email, approvalMessage.Subject, approvalMessage.Body);
         }
     }
 }
