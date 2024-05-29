@@ -22,7 +22,7 @@ public class AccreditationProposalProcessor
     public async Task HandleProposal(ProposalDto dto)
     {
         var proposal = new Proposal(dto);
-        _proposalRepository.SaveAsync(proposal);
+        await _proposalRepository.SaveAsync(proposal);
         var revenue = _revenueService.GetRevenuePercent(proposal.CompanyNumber);
         if (proposal.IsAppropriate(revenue))
         {
