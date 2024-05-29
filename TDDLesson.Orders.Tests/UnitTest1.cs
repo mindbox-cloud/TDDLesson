@@ -10,13 +10,13 @@ public class UnitTest1
     public void ShouldApproveProposal_WhenAllConditionsMet()
     {
         // Arrange
-        var proposal = new ProposalDto
+        var proposal = new Proposal(new ProposalDto
         {
             CompanyNumber = 1,
             CompanyName = "Mindbox",
             CompanyEmail = "test@mindbox.cloud",
             EmployeesAmount = 101
-        };
+        });
 
         var revenuePercent = 31;
 
@@ -31,13 +31,13 @@ public class UnitTest1
     public void ShouldNotApproveProposal_WhenNotEnoughEmployees()
     {
         // Arrange
-        var proposal = new ProposalDto
+        var proposal = new Proposal(new ProposalDto
         {
             CompanyNumber = 1,
             CompanyName = "Mindbox",
             CompanyEmail = "test@mindbox.cloud",
             EmployeesAmount = 100
-        };
+        });
 
         var revenuePercent = 31;
 
@@ -52,13 +52,13 @@ public class UnitTest1
     public void ShouldNotApproveProposal_WhenNotEnoughRevenuePercent()
     {
         // Arrange
-        var proposal = new ProposalDto
+        var proposal = new Proposal(new ProposalDto
         {
             CompanyNumber = 1,
             CompanyName = "Mindbox",
             CompanyEmail = "test@mindbox.cloud",
             EmployeesAmount = 101
-        };
+        });
 
         var revenuePercent = 30;
 
@@ -77,7 +77,7 @@ public class UnitTest1
         var revenuePercent = 30;
 
         //Act
-        var isApprovedAct = () => proposalDto.IsAppropriate(revenuePercent);
+        var isApprovedAct = () => new Proposal(proposalDto).IsAppropriate(revenuePercent);
 
         //Assert
         isApprovedAct.Should().Throw<ArgumentException>();
@@ -115,13 +115,13 @@ public class UnitTest1
     public void ShouldBuildInvitationalMessage_WhenProposalIsAppropriate()
     {
         // Arrange
-        var proposal = new ProposalDto
+        var proposal = new Proposal(new ProposalDto
         {
             CompanyNumber = 1,
             CompanyName = "Mindbox",
             CompanyEmail = "test@mindbox.cloud",
             EmployeesAmount = 501
-        };
+        });
 
         var processingDateTimeUtc = new DateOnly(2024, 06, 01);
 
