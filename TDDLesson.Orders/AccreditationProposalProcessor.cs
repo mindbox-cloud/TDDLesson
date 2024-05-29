@@ -19,6 +19,10 @@ public class AccreditationProposalProcessor
     
     public async Task HandleProposal(ProposalDto dto)
     {
+        ValidateProposalDto(dto);
+
+        var revenuePercent = _revenueService.GetRevenuePercent(dto.CompanyNumber);
+        
         var validProposal = ValidateProposal(dto.EmployeesAmount, _revenueService.GetRevenuePercent(dto.CompanyNumber));
 
         if (!validProposal) return;
@@ -40,6 +44,15 @@ public class AccreditationProposalProcessor
     public static bool ValidateNotification(DateTime date)
     {
         return date >= MinDate && date <= MaxDate;
+    }
+
+    public static void ValidateProposalDto(ProposalDto proposalDto)
+    {
+        if (proposalDto.EmployeesAmount < 0)
+            throw new ArgumentException("The number of employees cannot be negative.", nameof(proposalDto));
+
+        if (proposalDto.CompanyNumber < 0)
+            throw new ArgumentException("Company number cannot be negative.", nameof(proposalDto));
     }
 
     public static bool ValidateProposal(int employeesCount, float percentOfRevenue)
