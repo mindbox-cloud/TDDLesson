@@ -127,7 +127,7 @@ public class UnitTest1
         var processingDateTimeUtc = new DateOnly(2024, 06, 01);
 
         // Act
-        var invitationalMessage = NotificationsHelper.BuildInvitationalMessage(proposal, processingDateTimeUtc);
+        var invitationalMessage = NotificationsHelper.BuildInvitationalMessage(proposal);
 
         // Assert
         invitationalMessage.Should().Be((proposal.CompanyEmail, "Invitation to forum", "<p>Hello!</p>"));
@@ -217,19 +217,23 @@ public class UnitTest1
         var orderRepository = orderRepositoryMock.Object;
         var emailClientMock = new Mock<IEmailClient>();
         var emailClient = emailClientMock.Object;
+        var dateTimeMock = new Mock<IDateTimeProvider>();
+        dateTimeMock.Setup(p => p.GetDateTimeUtcNow())
+            .Returns(new DateTime(2024, 06, 02));
         
         
         var processor = new AccreditationProposalProcessor(
             revenueService,
             orderRepository,
-            emailClient);
+            emailClient,
+            dateTimeMock.Object);
         
         //Act
-        var task = processor.HandleProposal(proposalDto);
+        await processor.HandleProposal(proposalDto);
         
         //Assert
         emailClientMock.Verify(c => c.SendEmail("test@mindbox.cloud", "Invitation to forum", "<p>Hello!</p>"), Times.Once);
-        emailClientMock.Verify(c => c.SendEmail("test@mindbox.cloud", "ProposalIsProcessed", "<p>Hello!</p>"), Times.Once);
+        emailClientMock.Verify(c => c.SendEmail("test@mindbox.cloud", "Revenue approved", "<p>Hello!</p>"), Times.Once);
 
         orderRepositoryMock.Verify(r => r.SaveAsync(It.Is<Proposal>(p =>
             p.CompanyName == proposalDto.CompanyName 

@@ -6,9 +6,14 @@ public static class NotificationsHelper
    private static DateOnly RightBound = new DateOnly(2024, 09, 01);
    private static DateOnly LeftBound = new DateOnly(2024, 06, 01);
    
-   public static (string, string, string) BuildInvitationalMessage(Proposal proposal, DateOnly processingDate)
+   public static (string, string, string) BuildInvitationalMessage(Proposal proposal)
    {
-      return ("test@mindbox.cloud", "Invitation to forum", "<p>Hello!</p>");
+      return (proposal.CompanyEmail, "Invitation to forum", "<p>Hello!</p>");
+   }
+   
+   public static (string, string, string) BuildApprovalMessage(Proposal proposal)
+   {
+      return (proposal.CompanyEmail, "Revenue approved", "<p>Hello!</p>");
    }
 
    public static bool ShouldSentNotificationToForum(Proposal proposal, DateOnly processingDate)
