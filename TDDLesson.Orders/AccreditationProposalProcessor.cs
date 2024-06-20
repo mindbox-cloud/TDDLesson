@@ -1,18 +1,29 @@
 ﻿namespace TDDLesson;
 
-public class AccreditationProposalProcessor
+public class AccreditationProposalProcessor(
+    IRevenueService revenueService,
+    IRepository proposalRepository,
+    IEmailClient emailClient,
+    IDateTimeProvider dateTimeProvider)
 {
-    private readonly IRevenueService _revenueService;
-    private readonly IRepository _orderRepository;
-
-    public AccreditationProposalProcessor(IRevenueService revenueService, IRepository orderRepository)
-    {
-        _revenueService = revenueService;
-        _orderRepository = orderRepository;
-    }
-    
     public async Task HandleProposal(ProposalDto dto)
     {
+        var proposal = new Proposal(dto);
+        await proposalRepository.SaveAsync(proposal);
         
+        var revenue = revenueService.GetRevenuePercent(proposal.CompanyNumber);
+        
+        if (proposal.IsAppropriate(revenue))
+        {
+            var approvalMessage = MessageBuilder.BuildApprovalMessage(proposal);
+            await emailClient.SendEmail(approvalMessage.Email, approvalMessage.Subject, approvalMessage.Body);
+        }
+
+        if (ForumInvitationManager.ShouldSentNotificationToForum(proposal,
+                DateOnly.FromDateTime(dateTimeProvider.GetDateTimeUtcNow())))
+        {
+            var approvalMessage = MessageBuilder.BuildInvitationalMessage(proposal);
+            await emailClient.SendEmail(approvalMessage.Email, approvalMessage.Subject, approvalMessage.Body);
+        }
     }
 }
